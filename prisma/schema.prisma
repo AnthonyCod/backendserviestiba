@@ -15,9 +15,9 @@ model User {
   lastName  String    @db.VarChar(50)
   email     String    @unique @db.VarChar(100)
   password  String    @db.VarChar(255)
-  address   String?   @db.VarChar(150)
-  phone     String?   @db.VarChar(20)
-  dni       String?   @db.VarChar(10)
+  address   String   @db.VarChar(150)
+  phone     String   @db.VarChar(20)
+  dni       String   @db.VarChar(10)
   createdAt DateTime  @default(now()) @db.DateTime
   updatedAt DateTime  @default(now()) @updatedAt @db.DateTime
   clients   Client[]
@@ -37,10 +37,10 @@ model CatTerminal {
 
 model Quotation {
   id          Int       @id @default(autoincrement())
-  proposalId  Int?
+  proposalId  Int
   clientId    Int
-  workerId    Int?
-  terminalId  Int?
+  workerId    Int
+  terminalId  Int
   status      QuotationStatus @default(Pendiente)
   pdfUrl      String?   @db.VarChar(255)
   createdAt   DateTime  @default(now()) @db.DateTime
@@ -57,12 +57,12 @@ model Quotation {
 model Client {
   id            Int             @id @default(autoincrement())
   userId        Int
-  ruc           String?         @unique @db.Char(11)
-  accountNumber String?         @db.VarChar(20)
-  generalNumber String?         @db.VarChar(20)
-  secondaryEmail String?        @db.VarChar(100)
-  position      String?         @db.VarChar(50)
-  bankAccount   String?         @db.VarChar(25)
+  ruc           String        @unique @db.Char(11)
+  accountNumber String         @db.VarChar(20)
+  generalNumber String         @db.VarChar(20)
+  secondaryEmail String        @db.VarChar(100)
+  position      String         @db.VarChar(50)
+  bankAccount   String        @db.VarChar(25)
   createdAt     DateTime        @default(now()) @db.DateTime
   updatedAt     DateTime        @default(now()) @updatedAt @db.DateTime
   user          User            @relation(fields: [userId], references: [id])
@@ -78,11 +78,11 @@ model Client {
 model Estibador {
   id            Int      @id @default(autoincrement())
   userId        Int
-  district      String?  @db.VarChar(30)
+  district      String  @db.VarChar(30)
   status        EstibadorStatus @default(Activo)
   aptoMolitalia Boolean @default(false)
   aptoNestle    Boolean @default(false)
-  age           Int?
+  age           Int
   createdAt     DateTime @default(now()) @db.DateTime
   updatedAt     DateTime @default(now()) @updatedAt @db.DateTime
   user          User    @relation(fields: [userId], references: [id])
@@ -120,6 +120,7 @@ model Proposal {
   price       Decimal   @db.Decimal(10, 2)
   time        ProposalTime
   unity       String?   @db.VarChar(10)
+  prWork      ProposalStatus @default(operativo)
   location    String?   @db.VarChar(50)
   product     String?   @db.VarChar(50)
   activity    String?   @db.VarChar(50)
@@ -178,3 +179,8 @@ enum RequirementStatus {
   Finalizado
   Rechazado
 }
+
+enum ProposalStatus {
+  operativo
+  jornal
+  }
