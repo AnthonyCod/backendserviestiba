@@ -3,14 +3,13 @@ import { QUOTATION_REPOSITORY } from '../../domain/ports/quotation.repository.po
 import type { IQuotationRepository } from '../../domain/ports/quotation.repository.port';
 
 @Injectable()
-export class AddStevedoresToQuotationUseCase {
+export class ListQuotationsUseCase {
   constructor(
     @Inject(QUOTATION_REPOSITORY)
     private readonly quotationRepository: IQuotationRepository,
   ) {}
 
-  async execute(quotationId: number, stevedoreIds: number[]) {
-    // La lógica de negocio podría ir aquí (ej: verificar si los estibadores están activos)
-    return this.quotationRepository.addStevedores(quotationId, stevedoreIds);
+  async execute() {
+    return this.quotationRepository.findAll();
   }
 }

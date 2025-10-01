@@ -1,6 +1,6 @@
 // src/modules/user/controllers/user.controller.ts
 
-import { Controller, Post, Get, Param, Body, Put } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Put, ParseIntPipe } from '@nestjs/common';
 import { CreateUserDto } from '../../application/dtos/create-user.dto';
 import { CreateUserUseCase } from '../../application/use-cases/create-user.usecase';
 import { GetUserUseCase } from '../../application/use-cases/get-user.usecase';
@@ -23,12 +23,12 @@ export class UserController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: number) {
+  async findById(@Param('id', ParseIntPipe) id: number) {
     return this.getUserUseCase.execute(id);
   }
 
    @Put(':id') 
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id', ParseIntPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
     const userId = parseInt(id, 10); 
     return this.updateUserUseCase.execute(userId, updateUserDto);
   }

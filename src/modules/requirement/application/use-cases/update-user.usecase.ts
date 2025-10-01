@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../domain/ports/users.repository.port';
 import { User } from '../../domain/entities/user.entity';
-import { UpdateUserDto } from '../dtos/update-user.dto';
+import { UpdateUserDto } from 'src/modules/user/application/dtos/update-user.dto';
 
 @Injectable()
 export class UpdateUserUseCase {

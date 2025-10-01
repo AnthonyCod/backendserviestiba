@@ -10,152 +10,147 @@ generator client {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  firstName String    @db.VarChar(50)
-  lastName  String    @db.VarChar(50)
-  email     String    @unique @db.VarChar(100)
-  password  String    @db.VarChar(255)
-  address   String   @db.VarChar(150)
-  phone     String   @db.VarChar(20)
-  dni       String   @db.VarChar(10)
-  createdAt DateTime  @default(now()) @db.DateTime
-  updatedAt DateTime  @default(now()) @updatedAt @db.DateTime
-  clients   Client[]
+  id         Int         @id @default(autoincrement())
+  firstName  String      @db.VarChar(50)
+  lastName   String      @db.VarChar(50)
+  email      String      @unique @db.VarChar(100)
+  password   String      @db.VarChar(255)
+  address    String      @db.VarChar(150)
+  phone      String      @db.VarChar(20)
+  dni        String      @db.VarChar(10)
+  createdAt  DateTime    @default(now()) @db.DateTime
+  updatedAt  DateTime    @default(now()) @updatedAt @db.DateTime
+  clients    Client[]
   estibadors Estibador[]
-  workers   Worker[]
+  workers    Worker[]
 }
 
 model CatTerminal {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique @db.VarChar(30)
-  status    Boolean   @default(true)
-  createdAt DateTime  @default(now()) @db.DateTime
-  updatedAt DateTime  @default(now()) @updatedAt @db.DateTime
-  workers   Worker[]
+  id         Int         @id @default(autoincrement())
+  name       String      @unique @db.VarChar(30)
+  status     Boolean     @default(true)
+  createdAt  DateTime    @default(now()) @db.DateTime
+  updatedAt  DateTime    @default(now()) @updatedAt @db.DateTime
+  workers    Worker[]
   quotations Quotation[]
 }
 
 model Quotation {
-  id          Int       @id @default(autoincrement())
-  proposalId  Int
-  clientId    Int
-  workerId    Int
-  terminalId  Int
-  status      QuotationStatus @default(Pendiente)
-  pdfUrl      String?   @db.VarChar(255)
-  createdAt   DateTime  @default(now()) @db.DateTime
-  updatedAt   DateTime  @default(now()) @updatedAt @db.DateTime
-  proposal    Proposal? @relation(fields: [proposalId], references: [id])
-  client      Client    @relation(name: "ClientQuotationRelation", fields: [clientId], references: [id])
-  worker      Worker?   @relation(fields: [workerId], references: [id])
-  terminal    CatTerminal? @relation(fields: [terminalId], references: [id])
+  id           Int                  @id @default(autoincrement())
+  proposalId   Int
+  clientId     Int
+  workerId     Int
+  terminalId   Int
+  status       QuotationStatus      @default(Pendiente)
+  pdfUrl       String?              @db.VarChar(255)
+  createdAt    DateTime             @default(now()) @db.DateTime
+  updatedAt    DateTime             @default(now()) @updatedAt @db.DateTime
+  proposal     Proposal?            @relation(fields: [proposalId], references: [id])
+  client       Client               @relation(name: "ClientQuotationRelation", fields: [clientId], references: [id])
+  worker       Worker?              @relation(fields: [workerId], references: [id])
+  terminal     CatTerminal?         @relation(fields: [terminalId], references: [id])
   requirements Requirement[]
-  estibadores QuotationEstibador[]
-
+  estibadores  QuotationEstibador[] 
 }
 
 model Client {
-  id            Int             @id @default(autoincrement())
-  userId        Int
-  ruc           String        @unique @db.Char(11)
-  accountNumber String         @db.VarChar(20)
-  generalNumber String         @db.VarChar(20)
-  secondaryEmail String        @db.VarChar(100)
-  position      String         @db.VarChar(50)
-  bankAccount   String        @db.VarChar(25)
-  createdAt     DateTime        @default(now()) @db.DateTime
-  updatedAt     DateTime        @default(now()) @updatedAt @db.DateTime
-  user          User            @relation(fields: [userId], references: [id])
-  proposals     Proposal[]
-  requirements  Requirement[]
-  bankAccountDetails BankAccountDetails[]
-
-  // Relación inversa con Quotation (relación correcta)
-  quotations    Quotation[] @relation(name: "ClientQuotationRelation")  // Relación inversa con nombre único
+  id                   Int                  @id @default(autoincrement())
+  userId               Int
+  ruc                  String               @unique @db.Char(11)
+  accountNumber        String               @db.VarChar(20)
+  generalNumber        String               @db.VarChar(20)
+  secondaryEmail       String               @db.VarChar(100)
+  position             String               @db.VarChar(50)
+  bankAccount          String               @db.VarChar(25)
+  createdAt            DateTime             @default(now()) @db.DateTime
+  updatedAt            DateTime             @default(now()) @updatedAt @db.DateTime
+  user                 User                 @relation(fields: [userId], references: [id])
+  proposals            Proposal[]
+  requirements         Requirement[]
+  bankAccountDetails   BankAccountDetails[]
+  quotations           Quotation[]          @relation(name: "ClientQuotationRelation")
 }
 
-
 model Estibador {
-  id            Int      @id @default(autoincrement())
+  id            Int                  @id @default(autoincrement())
   userId        Int
-  district      String  @db.VarChar(30)
-  status        EstibadorStatus @default(Activo)
-  aptoMolitalia Boolean @default(false)
-  aptoNestle    Boolean @default(false)
+  district      String               @db.VarChar(30)
+  status        EstibadorStatus      @default(Activo)
+  aptoMolitalia Boolean              @default(false)
+  aptoNestle    Boolean              @default(false)
   age           Int
-  createdAt     DateTime @default(now()) @db.DateTime
-  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime
-  user          User    @relation(fields: [userId], references: [id])
+  createdAt     DateTime             @default(now()) @db.DateTime
+  updatedAt     DateTime             @default(now()) @updatedAt @db.DateTime
+  user          User                 @relation(fields: [userId], references: [id])
   quotations    QuotationEstibador[]
 }
 
 model Worker {
-  id         Int       @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   userId     Int
-  position   String    @db.VarChar(12)
+  position   String      @db.VarChar(12)
   terminalId Int
-  createdAt  DateTime  @default(now()) @db.DateTime
-  updatedAt  DateTime  @default(now()) @updatedAt @db.DateTime
-  user       User      @relation(fields: [userId], references: [id])
+  createdAt  DateTime    @default(now()) @db.DateTime
+  updatedAt  DateTime    @default(now()) @updatedAt @db.DateTime
+  user       User        @relation(fields: [userId], references: [id])
   terminal   CatTerminal @relation(fields: [terminalId], references: [id])
-
-  // Relación inversa con Quotation
-  quotations  Quotation[] // Relación inversa con nombre único
+  quotations Quotation[]
 }
 
 model BankAccountDetails {
-  accountId  Int      @id @default(autoincrement())
-  clientId   Int
-  accountName String  @db.VarChar(50)
-  accountNumber String @db.VarChar(30)
-  createdAt  DateTime @default(now()) @db.DateTime
-  updatedAt  DateTime @default(now()) @updatedAt @db.DateTime
-  client     Client   @relation(fields: [clientId], references: [id])
+  accountId     Int      @id @default(autoincrement())
+  clientId      Int
+  accountName   String   @db.VarChar(50)
+  accountNumber String   @db.VarChar(30)
+  createdAt     DateTime @default(now()) @db.DateTime
+  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime
+  client        Client   @relation(fields: [clientId], references: [id])
+
   @@unique([clientId, accountNumber])
 }
 
 model Proposal {
-  id          Int       @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   clientId    Int
-  price       Decimal   @db.Decimal(10, 2)
+  price       Decimal        @db.Decimal(10, 2)
   time        ProposalTime
-  unity       String?   @db.VarChar(10)
+  unity       String?        @db.VarChar(10)
   prWork      ProposalStatus @default(operativo)
-  location    String?   @db.VarChar(50)
-  product     String?   @db.VarChar(50)
-  activity    String?   @db.VarChar(50)
-  description String?   @db.Text
-  createdAt   DateTime  @default(now()) @db.DateTime
-  updatedAt   DateTime  @default(now()) @updatedAt @db.DateTime
-  client      Client    @relation(fields: [clientId], references: [id])
+  location    String?        @db.VarChar(50)
+  product     String?        @db.VarChar(50)
+  activity    String?        @db.VarChar(50)
+  description String?        @db.Text
+  pdfUrl      String?        @db.VarChar(255) 
+  createdAt   DateTime       @default(now()) @db.DateTime
+  updatedAt   DateTime       @default(now()) @updatedAt @db.DateTime
+  client      Client         @relation(fields: [clientId], references: [id])
   quotations  Quotation[]
 }
 
-
-
 model QuotationEstibador {
-  id           Int       @id @default(autoincrement())
-  quotationId  Int
-  estibadorId  Int
-  createdAt    DateTime  @default(now()) @db.DateTime
-  updatedAt    DateTime  @default(now()) @updatedAt @db.DateTime
-  quotation    Quotation @relation(fields: [quotationId], references: [id])
-  estibador    Estibador @relation(fields: [estibadorId], references: [id])
+  id          Int       @id @default(autoincrement())
+  quotationId Int
+  estibadorId Int
+  createdAt   DateTime  @default(now()) @db.DateTime
+  updatedAt   DateTime  @default(now()) @updatedAt @db.DateTime
+  quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  estibador   Estibador @relation(fields: [estibadorId], references: [id])
+
   @@unique([quotationId, estibadorId])
 }
 
 model Requirement {
-  id          Int       @id @default(autoincrement())
-  quotationId  Int
-  clientId    Int
-  status      RequirementStatus @default(En_Proceso)
-  cotizacionUrl String?  @db.VarChar(150)
-  facturacionUrl String? @db.VarChar(150)
-  cumplimientoUrl String? @db.VarChar(150)
-  createdAt   DateTime  @default(now()) @db.DateTime
-  updatedAt   DateTime  @default(now()) @updatedAt @db.DateTime
-  quotation   Quotation @relation(fields: [quotationId], references: [id])
-  client      Client    @relation(fields: [clientId], references: [id])
+  id              Int               @id @default(autoincrement())
+  quotationId     Int
+  clientId        Int
+  status          RequirementStatus @default(En_Proceso)
+  cotizacionUrl   String?           @db.VarChar(255) 
+  facturacionUrl  String?           @db.VarChar(255) 
+  cumplimientoUrl String?           @db.VarChar(255) 
+  createdAt       DateTime          @default(now()) @db.DateTime
+  updatedAt       DateTime          @default(now()) @updatedAt @db.DateTime
+  quotation       Quotation         @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  client          Client            @relation(fields: [clientId], references: [id])
 }
 
 enum EstibadorStatus {
@@ -183,4 +178,4 @@ enum RequirementStatus {
 enum ProposalStatus {
   operativo
   jornal
-  }
+}

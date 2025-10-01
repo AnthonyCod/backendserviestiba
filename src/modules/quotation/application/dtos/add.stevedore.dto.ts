@@ -1,7 +1,8 @@
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsArray, IsInt, ArrayNotEmpty } from 'class-validator';
 
-export class AddStevedoreDto {
-    @IsInt()
-    @IsNotEmpty()
-    stevedoreId: number;
+export class AddStevedoresDto {
+    @IsArray()
+    @ArrayNotEmpty()
+    @IsInt({ each: true })
+    stevedoreIds: number[];
 }

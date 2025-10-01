@@ -5,9 +5,9 @@ CREATE TABLE `User` (
     `lastName` VARCHAR(50) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
-    `address` VARCHAR(150) NULL,
-    `phone` VARCHAR(20) NULL,
-    `dni` VARCHAR(10) NULL,
+    `address` VARCHAR(150) NOT NULL,
+    `phone` VARCHAR(20) NOT NULL,
+    `dni` VARCHAR(10) NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -30,10 +30,10 @@ CREATE TABLE `CatTerminal` (
 -- CreateTable
 CREATE TABLE `Quotation` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `proposalId` INTEGER NULL,
+    `proposalId` INTEGER NOT NULL,
     `clientId` INTEGER NOT NULL,
-    `workerId` INTEGER NULL,
-    `terminalId` INTEGER NULL,
+    `workerId` INTEGER NOT NULL,
+    `terminalId` INTEGER NOT NULL,
     `status` ENUM('Pendiente', 'Aprobada', 'Rechazada') NOT NULL DEFAULT 'Pendiente',
     `pdfUrl` VARCHAR(255) NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -46,12 +46,12 @@ CREATE TABLE `Quotation` (
 CREATE TABLE `Client` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
-    `ruc` CHAR(11) NULL,
-    `accountNumber` VARCHAR(20) NULL,
-    `generalNumber` VARCHAR(20) NULL,
-    `secondaryEmail` VARCHAR(100) NULL,
-    `position` VARCHAR(50) NULL,
-    `bankAccount` VARCHAR(25) NULL,
+    `ruc` CHAR(11) NOT NULL,
+    `accountNumber` VARCHAR(20) NOT NULL,
+    `generalNumber` VARCHAR(20) NOT NULL,
+    `secondaryEmail` VARCHAR(100) NOT NULL,
+    `position` VARCHAR(50) NOT NULL,
+    `bankAccount` VARCHAR(25) NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -63,11 +63,11 @@ CREATE TABLE `Client` (
 CREATE TABLE `Estibador` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
-    `district` VARCHAR(30) NULL,
+    `district` VARCHAR(30) NOT NULL,
     `status` ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
     `aptoMolitalia` BOOLEAN NOT NULL DEFAULT false,
     `aptoNestle` BOOLEAN NOT NULL DEFAULT false,
-    `age` INTEGER NULL,
+    `age` INTEGER NOT NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -106,10 +106,12 @@ CREATE TABLE `Proposal` (
     `price` DECIMAL(10, 2) NOT NULL,
     `time` ENUM('Dia', 'Noche') NOT NULL,
     `unity` VARCHAR(10) NULL,
+    `prWork` ENUM('operativo', 'jornal') NOT NULL DEFAULT 'operativo',
     `location` VARCHAR(50) NULL,
     `product` VARCHAR(50) NULL,
     `activity` VARCHAR(50) NULL,
     `description` TEXT NULL,
+    `pdfUrl` VARCHAR(255) NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -134,9 +136,9 @@ CREATE TABLE `Requirement` (
     `quotationId` INTEGER NOT NULL,
     `clientId` INTEGER NOT NULL,
     `status` ENUM('En_Proceso', 'Finalizado', 'Rechazado') NOT NULL DEFAULT 'En_Proceso',
-    `cotizacionUrl` VARCHAR(150) NULL,
-    `facturacionUrl` VARCHAR(150) NULL,
-    `cumplimientoUrl` VARCHAR(150) NULL,
+    `cotizacionUrl` VARCHAR(255) NULL,
+    `facturacionUrl` VARCHAR(255) NULL,
+    `cumplimientoUrl` VARCHAR(255) NULL,
     `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -144,16 +146,16 @@ CREATE TABLE `Requirement` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_proposalId_fkey` FOREIGN KEY (`proposalId`) REFERENCES `Proposal`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_proposalId_fkey` FOREIGN KEY (`proposalId`) REFERENCES `Proposal`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_clientId_fkey` FOREIGN KEY (`clientId`) REFERENCES `Client`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_workerId_fkey` FOREIGN KEY (`workerId`) REFERENCES `Worker`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_workerId_fkey` FOREIGN KEY (`workerId`) REFERENCES `Worker`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_terminalId_fkey` FOREIGN KEY (`terminalId`) REFERENCES `CatTerminal`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `Quotation` ADD CONSTRAINT `Quotation_terminalId_fkey` FOREIGN KEY (`terminalId`) REFERENCES `CatTerminal`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Client` ADD CONSTRAINT `Client_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -174,13 +176,13 @@ ALTER TABLE `BankAccountDetails` ADD CONSTRAINT `BankAccountDetails_clientId_fke
 ALTER TABLE `Proposal` ADD CONSTRAINT `Proposal_clientId_fkey` FOREIGN KEY (`clientId`) REFERENCES `Client`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `QuotationEstibador` ADD CONSTRAINT `QuotationEstibador_quotationId_fkey` FOREIGN KEY (`quotationId`) REFERENCES `Quotation`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `QuotationEstibador` ADD CONSTRAINT `QuotationEstibador_quotationId_fkey` FOREIGN KEY (`quotationId`) REFERENCES `Quotation`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `QuotationEstibador` ADD CONSTRAINT `QuotationEstibador_estibadorId_fkey` FOREIGN KEY (`estibadorId`) REFERENCES `Estibador`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Requirement` ADD CONSTRAINT `Requirement_quotationId_fkey` FOREIGN KEY (`quotationId`) REFERENCES `Quotation`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Requirement` ADD CONSTRAINT `Requirement_quotationId_fkey` FOREIGN KEY (`quotationId`) REFERENCES `Quotation`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Requirement` ADD CONSTRAINT `Requirement_clientId_fkey` FOREIGN KEY (`clientId`) REFERENCES `Client`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

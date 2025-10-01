@@ -1,19 +1,15 @@
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsInt, IsPositive } from 'class-validator';
 
 export class CreateQuotationDto {
   @IsInt()
-  @IsNotEmpty()
+  @IsPositive()
   proposalId: number;
 
   @IsInt()
-  @IsNotEmpty()
-  clientId: number;
-
-  @IsInt()
-  @IsNotEmpty()
+  @IsPositive()
   workerId: number;
 
   @IsInt()
-  @IsNotEmpty()
+  @IsPositive()
   terminalId: number;
 }

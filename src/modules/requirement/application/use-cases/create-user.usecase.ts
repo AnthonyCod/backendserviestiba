@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../domain/ports/users.repository.port';
 import { User } from '../../domain/entities/user.entity';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateUserDto } from 'src/modules/user/application/dtos/create-user.dto';
 
 @Injectable()
 export class CreateUserUseCase {

@@ -4,10 +4,10 @@ export class User {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string | null;
-  address: string | null;
+  phone: string;
+  address: string;
   createdAt: Date;
   updatedAt: Date;
   password: string;
-  dni: string | null;
+  dni: string;
 }

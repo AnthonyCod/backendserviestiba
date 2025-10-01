@@ -15,10 +15,10 @@ export class PrismaUserRepository implements UserRepository {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        phone: user.phone ?? null,
-        address: user.address ?? null,
-        password: user.password,  // Asegúrate de incluir el campo `password`
-        dni: user.dni ?? null,    // También incluye otros campos como `dni` si son necesarios
+        phone: user.phone ?? '',
+        address: user.address ?? '',
+        password: user.password,  
+        dni: user.dni ?? '',   
       },
     });
   }
@@ -40,10 +40,10 @@ export class PrismaUserRepository implements UserRepository {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        phone: user.phone ?? null,
-        address: user.address ?? null,
+        phone: user.phone ?? '',
+        address: user.address ?? '',
         password: user.password,  
-        dni: user.dni ?? null,    
+        dni: user.dni ?? '',    
       },
     });
   }
